@@ -1,5 +1,8 @@
 package com.imooc
 
+/**
+  * Scala 函数
+  */
 object FunctionApp {
   def main(args: Array[String]): Unit = {
     println(sum(3, 5))  // 8
