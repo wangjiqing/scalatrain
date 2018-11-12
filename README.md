@@ -323,4 +323,117 @@
         
 七、apply方法
 
+    1. 对于伴生对象指的是一个类的单例对象
+    2. 使用伴生类或者伴生对象的名字后面加()指的是调用了伴生对象中的apply()方法，apply方法必须写
+    3. 使用new关键字创建的对象，后面加()然后调用，指的是调用了Class.apply()方法，也就是说使用类的实例加()调用的是Class.apply()方法
+    4. 最佳实践：在object的apply方法中去new Class（经测试在object中的apply中隐式的调用了new Class）
     
+        object ApplyApp {
+          def main(args: Array[String]): Unit = {
+        //    for (i <- 1 to 10) {
+        //      ApplyTest.incr
+        //    }
+        //    println(ApplyTest.count)  // 10 说明Object本身就是一个单例对象
+        
+            val b = ApplyTest()   // 这里直接调用的是object.apply方法
+        
+            val c = new ApplyTest()
+            println(c)
+            c()   // 这里使用类的实例加()调用的是 Class.apply() 方法
+          }
+        }
+        
+        // 伴生对象
+        object ApplyTest {
+          println("Object ApplyTest enter ...")
+        
+          var count = 0
+        
+          def incr = {
+            count = count + 1
+          }
+        
+          // 最佳实践：在Object的apply方法中去new Class
+          def apply() = {
+            println("Object ApplyTest apply ...")
+        
+            // 在object中的apply中new class，这里隐式的调用了new ApplyTest
+        //    new ApplyTest()
+          }
+        
+          println("Object ApplyTest leave ...")
+        }
+        
+        // 伴生类
+        class ApplyTest {
+          def apply() = {
+            println("Class ApplyTest apply ...")
+          }
+        }
+
+八、case class
+
+    case class使用不需要new关键字，通常用在模式匹配中。当一个类被声明为case class的时候，Scala会帮助我们做以下几件事情：
+    
+    1） 构造器中的参数如果不被声明为var的话，默认是val类型的，但一般不推荐将构造器中的参数声明为var
+    2） 自动创建伴生对象，同时在里面帮我们实现apply方法，使得我们在使用的时候可以不直接显式的new对象
+    3）伴生对象中同样会帮我们实现unapply方法，从而可以将case class应用于模式匹配（关于unapply方法后面说）
+    4）实现自己的toString、hashCode、copy、equals方法
+    
+    除此之外与普通的Scala类没有区别
+    
+        object CaseClassApp {
+          def main(args: Array[String]): Unit = {
+            // case class使用不需要new关键字，通常用在模式匹配中
+            println(Dog("wangcai").name)
+          }
+        }
+        
+        case class Dog(name: String)
+        
+九、trait
+
+    1. 中文翻译为“特征”。用于在类之间共享接口和字段。它们类似于Java8中的接口。类和对象可以扩展trait。但是trait不能被实例化，因此没有参数
+    2. 定义一个trait（最小trait只有关键字trait和标识符）
+    
+        trait MyTraitApp
+    
+    3. trait作为泛型类型和抽象方法特别有用
+    
+        trait Iterator[A] {
+          def hasNext: Boolean
+          def next: A
+        }
+    
+        扩展trait Iterator[A]需要一个类型A和方法实现hasNext和next。
+    
+    4. 使用trait：可以使用extends关键字来扩展trait（多个trait使用with关键字连接），然后使用override关键字实现trait的任何抽象成员。
+    
+        object TestTrait {
+          def main(args: Array[String]): Unit = {
+            val iterator = new IntIterator(10)
+            println(iterator.hasNext) // return true
+            println(iterator.next())  // return 0
+            println(iterator.next)    // return 1
+          }
+        }
+        
+        trait Iterator[A] {
+          def hasNext: Boolean
+          def next: A
+        }
+        
+        class IntIterator(to: Int) extends Iterator[Int] {
+          private var current = 0
+        
+          override def hasNext: Boolean = current < to
+          override def next(): Int = {
+            if (hasNext) {
+              val t = current
+              current += 1
+              t
+            } else 0
+          }
+        }
+        
+        此类IntIterator将参数to作为上限。这extends Iterator[Int]意味着该next方法必须返回一个Int。
