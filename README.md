@@ -437,3 +437,40 @@
         }
         
         此类IntIterator将参数to作为上限。这extends Iterator[Int]意味着该next方法必须返回一个Int。
+  
+<h3> 1.3 Scala中的数组 </h3>
+
+一、定长数组
+
+    1. 创建一个长度为5的数组
+    
+        val a = new Array[String](5)
+    
+    2. 得到数组的长度
+    
+        println(a.length)     // 5
+        
+    3. 向数组指定下标赋值
+    
+        a(0) = "hello"
+        
+    4. 取出数组指定下标的元素
+    
+        println(a(0))
+        
+    5. 可以调用Array伴生对象的apply方法创建数组
+    
+        val b = Array("hadoop", "spark", "storm")
+        
+    6. Scala封装了数组的一些方法（Java中没有）
+    
+        val c = Array(1, 2, 3, 4, 5, 6, 7, 8)
+        println(c.sum)        // 36
+        println(c.max)        // 8
+        println(c.min)        // 1
+        
+    7. Scala数组转化String
+    
+        println(c.mkString)   //  12345678
+        println(c.mkString(","))  //  1,2,3,4,5,6,7,8
+        println(c.mkString("<", ",", ">"))  //  <1,2,3,4,5,6,7,8>
