@@ -529,3 +529,51 @@
         }
         
     ...
+    
+三、List
+
+    1. Nil一个不可变的List
+    
+        ·println(Nil)
+        
+    2. 可以使用下面的方式创建一个数组
+    
+        val l = List(1, 2, 3, 4, 5)
+        
+    3. 一个List由头和尾两部分组成
+    
+        println(l.head) // 1
+        println(l.tail) // List(2, 3, 4, 5)
+        
+    4. 以下是Scala创建List的另外一种方式
+    
+        val l2 = 1 :: Nil
+        val l3 = 1 :: 2 :: 3 :: Nil
+        
+    5. 使用ListBuffer作为变长的List，可以使用其类似数组的方法
+    
+        al l4 = scala.collection.mutable.ListBuffer[Int]()
+        l4 += 1;
+        l4 += (2, 3)
+        l4 ++= List(4, 5, 6)
+        println(l4)     // ListBuffer(1, 2, 3, 4, 5, 6)
+        l4 -= 1
+        l4 -= (0, 4)
+        l4 --= List(5, 6)
+        println(l4)     // ListBuffer(2, 3)
+        
+    6. ListBuffer的转化
+    
+        println(l4.toList)  // List(2, 3)
+        println(l4.toArray) // [I@57829d67
+        
+    7. 利用head及tail做一个递归计算
+    
+        // 递归计算首尾相加
+        def sum(nums: Int*): Int = {
+          if (nums.length == 0) {
+            0
+          } else {
+            nums.head + sum(nums.tail:_*)
+          }
+        }
