@@ -1,4 +1,4 @@
-package com.imooc
+package com.imooc.clazz
 
 /**
   * Scala中的对象：类的定义和使用

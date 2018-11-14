@@ -1,4 +1,4 @@
-package com.imooc
+package com.imooc.clazz
 
 object TestTrait {
   def main(args: Array[String]): Unit = {

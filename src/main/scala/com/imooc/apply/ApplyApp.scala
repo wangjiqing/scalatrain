@@ -1,4 +1,4 @@
-package com.imooc
+package com.imooc.apply
 
 object ApplyApp {
   def main(args: Array[String]): Unit = {

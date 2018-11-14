@@ -1,4 +1,4 @@
-package com.imooc
+package com.imooc.clazz
 
 object AbstractApp {
   def main(args: Array[String]): Unit = {
