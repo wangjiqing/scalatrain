@@ -474,3 +474,58 @@
         println(c.mkString)   //  12345678
         println(c.mkString(","))  //  1,2,3,4,5,6,7,8
         println(c.mkString("<", ",", ">"))  //  <1,2,3,4,5,6,7,8>
+        
+二、变长数组（数组缓冲区）
+
+    1. 声明一个变长的数组(ArrayBuffer)，又称为数组缓冲区
+    
+        val d = scala.collection.mutable.ArrayBuffer[Int]()
+        
+    2. 向数组缓冲区中追加一个元素
+    
+        d += 1
+        d += 2
+        
+    3. 向数组缓冲区中追加多个元素
+    
+        d += (3, 4, 5)
+        
+    4. 向数组缓冲区追加一个数组
+    
+        d ++= Array(6, 7, 8)
+        
+    5. 指定数组缓冲区的下标位置添加一个元素
+        
+        d.insert(0, 0)
+        
+    6. 指定数组缓冲区的下标位置移除一个元素
+    
+        d.remove(1)
+        
+    7. 指定数组缓冲区的下标范围移除多个元素（从0到3）
+    
+        d.remove(0, 3)
+        
+    8. 从数组缓冲区的尾部移除多个元素
+    
+        d.trimEnd(2)
+        
+    9. 数组缓冲区转化为数组
+    
+        d.toArray (d.toArray.mkString(","))
+        
+    10. 遍历数组缓冲区的方法
+    
+        for (i <- 0 until d.length) {
+            print(d(i) + " ")
+        }
+        
+        for (ele <- d) {
+            print(ele)
+        }
+        
+        for (j <- (0 until d.length).reverse) {
+            print(d(j))
+        }
+        
+    ...
