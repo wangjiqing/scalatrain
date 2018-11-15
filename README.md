@@ -530,7 +530,7 @@
         
     ...
     
-三、List
+三、List (collection)
 
     1. Nil一个不可变的List
     
@@ -578,7 +578,7 @@
           }
         }
         
-四、Map
+四、Map (collection)
 
     1. 创建一个map
     
@@ -615,3 +615,58 @@
         
     ...
     
+五、 Option&Some&None (option)
+
+    1. 避免null的使用
+    
+        大多数语言都有一个特殊的关键字或者对象来表示一个对象引用的是“无”，在Java中，它是null。Java语言中，null是一个关键字，不是一个对象，
+        所以对它调用任何方法都是非法的。但是这对语言设计者来说是一件令人困惑的选择：为什么要在程序员希望返回一个对象的时候返回一个关键字呢？
+        
+    2. Option
+    
+        为了让所有事物都是对象的目标一致，也为了遵循函数式编程的习惯，Scala鼓励在变量或函数返回值可能不会引用任何值的时候使用Option类型。
+        
+    3. None
+    
+        在没有值的时候，使用None，这是Option的子类。None被声明为一个对象，而不是一个类，因为我们只需要它的一个实例。这样它多少有点像null关键
+        字，但是它却是一个实实在在的，有方法的对象。
+        
+    4. Some
+    
+        如果有值的时候就是用Some来包含这个值，Some也是Option的子类
+        
+    5. 应用举例
+    
+        Option类型的值通常作为Scala集合类型（List、Map等）操作的返回类型。比如Map的get方法
+        
+        val capitals = Map("France" -> "Paris", "Japan" -> "Tokyo", "China" -> "Beijing")
+        println(capitals get "China")     // Some(Beijing)
+        println(capitals.get("North Pole")) // None
+        
+    6. Option有两个子类别，Some和None。当程序回传Some的时候，代表这个函数式成功的给了你一个String，然后我们可以通过get()函数得到这个
+       String。如果程序返回的是None，则代表没有字符串可以返回。
+       
+    7. 在返回None，也就是没有String给你的时候，如果还调用get()来取String的话，Scala一样会抛出异常（NoSuchElementException）。为了避免
+       这个异常，可以选择另外的方法getOrElse。这个方法在Option是Some的实例时返回对应的值，而Option时None的时候返回传入的参数。换句话说，传
+       入getOrElse的参数实际上时默认返回值。
+       
+       // 没有值调用的时候依旧会抛出异常
+       println(capitals get "North Pole" get) // Exception
+       // Scala推荐使用getOrElse方法，设置一个默认值，没有值返回的时候使用默认值作为返回值
+       println(capitals get "North Pole" getOrElse "Oops") // Oops
+       println(capitals.get("China").getOrElse("Oops"))    // Beijing
+       
+    8. Scala程序中使用Option非常频繁，在Java中使用null表示空值，代码中很多地方都要添加null关键字检测，不然很容易出现NullPointException。
+       因此 Java 程序需要关心那些变量可能是 null,而这些变量出现 null 的可能性很低，但一但出现，很难查出为什么出现 NullPointerException。 
+       Scala 的 Option 类型可以避免这种情况，因此 Scala 应用推荐使用 Option 类型来代表一些可选值。使用 Option 类型，读者一眼就可以看出这
+       种类型的值可能为 None。
+       实际上，多亏 Scala 的静态类型，你并不能错误地尝试在一个可能为 null 的值上调用方法。虽然在 Java 中这是个很容易犯的错误，它在 Scala 
+       却通不过编译，这是因为 Java 中没有检查变量是否为 null 的编程作为变成 Scala 中的类型错误（不能将 Option[String] 当做 String 来使
+       用）。所以，Option 的使用极强地鼓励了更加弹性的编程习惯。
+       
+    9. 详解Option
+    
+        在Scala中Option[T]实际上是一个容器，就像数组或者List一样，可以把它看作时可能有零个到一个的元素Lis。t当你的 Option 里面有东西的时
+        候，这个 List 的长度是 1（也就是 Some），而当你的 Option 里没有东西的时候，它的长度是 0（也就是 None）。
+        如果把 Option 当成一般的 List 来用，并且用一个 for 循环来遍历这个 Option 的时候，如果 Option 是 None，那这个 for 循环里的程序
+        代码自然不会执行，于是我们就达到了「不用检查 Option 是否为 None 这件事。
