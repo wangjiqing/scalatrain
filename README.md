@@ -577,3 +577,41 @@
             nums.head + sum(nums.tail:_*)
           }
         }
+        
+四、Map
+
+    1. 创建一个map
+    
+        var m = Map("Alice" -> 1, "Bob" -> 3, "Mike" -> 6)
+        
+    2. 向Map中追加一个kv
+    
+        m+=("Ann" -> 8)
+        
+    3. 追加一个Map
+    
+        m++=Map("Ant" -> 5, "Dob" -> 6)
+        
+    4. 打印所有的key
+    
+        println(m.keys)
+        println(m.keySet)
+        
+    5. 移除一个kv
+    
+        m-=("Ann")
+        
+    6. 取值
+    
+        rintln(m get "Bob")  // Some(3)
+        println(m("Bob"))     // 3
+     
+    7. 遍历
+    
+        for (kv <- mm) {
+          print(kv)         // (one,1)(three,3)(four,4)(two,2)
+          print(kv._1 + " " + kv._2 + " | ")    // one 1 | three 3 | four 4 | two 2 |
+        }
+        
+    ...
+    
