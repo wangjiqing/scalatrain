@@ -670,3 +670,36 @@
         候，这个 List 的长度是 1（也就是 Some），而当你的 Option 里没有东西的时候，它的长度是 0（也就是 None）。
         如果把 Option 当成一般的 List 来用，并且用一个 for 循环来遍历这个 Option 的时候，如果 Option 是 None，那这个 for 循环里的程序
         代码自然不会执行，于是我们就达到了「不用检查 Option 是否为 None 这件事。
+        
+六、Tuple元组 (tuple)
+
+    1. 与列表一样，Tuple（元组）也是不可变的，但与列表不同的是Tuple可以包含不同类型的元素，Tuple的值是通过将单个的值包含在圆括号中构成的。
+       例如：
+       
+        val t = (1, 3.14, "Fred")
+        val tn = new Tuple3(1, 3.14, "Fred")
+            
+    2. Tuple的实际类型取决于它的元素的类型（由于Scala的类型自动推导）。目前Scala支持的元组类型最大长度为22.对于更大长度可以使用集合，或者扩展
+       Tuple。   
+       
+    3. 访问Tuple元素
+    
+        val tx = (4, 3, 2, 1)
+        val sum = tx._1 + tx._2 + tx._3
+        println(sum)    
+           
+    4. 迭代Tuple
+    
+        tx.productIterator.foreach{
+          i => print("value = " + i + " | ")    // value = 4 | value = 3 | value = 2 | value = 1 | 
+        }
+    
+    5. Tuple转化为字符串
+    
+        val ts = (1, "hello", Console)
+        println(ts.toString())
+        
+    6. Tuple元素交换
+    
+        val tm = new Tuple2("www.baidu.com", "www.google.com")
+        println(tm.swap) 
