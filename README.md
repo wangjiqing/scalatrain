@@ -947,3 +947,68 @@
     
         println(f.flatMap(_ map (_ * 2))) // List(2, 4, 6, 8, 10, 12)
         
+五、偏函数 （https://www.cnblogs.com/MOBIN/p/5326994.html）
+
+    1. Scala-Partial Functions：定义一个函数，只能接受和处理其参数定义域范围内的子集，对于这个参数范围外的参数则抛出异常，这样的函数
+       就是偏函数（可以这么理解：偏函数只处理传入来的部分参数）。
+       
+    2. 偏函数的类型为PartialFunction[A, B]，其中接收一个类型为A的参数，返回一个类型为B的结果。其中有个重要的函数就是：
+        
+        def isDefinedAt(x: A): Boolean // 判断传入来的参数是否在这个偏函数所处理的范围内
+    
+        定义一个普通的除法函数
+        
+        val divide = (x: Int) => 100 / x
+        divide(0)     // exception
+        
+        显然，当我们将0作为参数传入时会报错，一般的解决办法就是使用try/catch来捕捉异常或者对参数进行判断看其是否等于0;但是在Scala的偏
+        函数中这些都已经封装好了，如下：将divide定义成一个偏函数：
+        
+        val divide = new PartialFunction[Int, Int] {
+          	override def isDefinedAt(x: Int): Boolean = x != 0  // 判断x是否等于0，当x=0时抛出异常
+        def apply(x: Int): Int = 100 / x
+        }	
+        
+        println(divide(0))
+        
+        偏函数与case语句结合起来就能使代码更简洁
+        
+        val divide1 : PartialFunction[Int, Int] = {
+          	case d: Int if d != 0 => 100 / d
+        }
+        
+        println(divide1(0))
+        
+        下面代码就是对上面那段代码的封装，这里同样调用isDefinedAt方法
+        
+        scala> divide1.isDefinedAt(0)
+        res1: Boolean = false
+        
+        scala> divide1.isDefinedAt(10)
+        res2: Boolean = true
+        
+    3. 使用OrElse方法可以将多个偏函数组合起来使用，结合起来的效果类似于case语句，每个偏函数里又可以再使用case
+    
+        scala> val or1: PartialFunction[Int, String] = {case 1 => "One"}
+        or1: PartialFunction[Int,String] = <function1>
+        
+        scala> val or2: PartialFunction[Int, String] = {case 2 => "two"}
+        or2: PartialFunction[Int,String] = <function1>
+        
+        scala> val or3: PartialFunction[Int, String] = {case 3 => "three"}
+        or3: PartialFunction[Int,String] = <function1>
+        
+        scala> val or = or1 orElse or2 orElse or3
+        
+        scala> or(1)
+        res1: String = One
+        
+        scala> or(2)
+        res2: String = two
+        
+        scala> or(3)
+        res3: String = three
+        
+    4. andThen 对函数的结果进行下一步的处理
+    
+        
