@@ -703,3 +703,138 @@
     
         val tm = new Tuple2("www.baidu.com", "www.google.com")
         println(tm.swap) 
+        
+<h3> 1.4 Scala中的模式匹配 </h3>
+
+一、最基础的模式匹配
+
+    同Java类似的的switch case语句类似，对一个值进行条件判断，返回针对不同的条件进行不同处理的代码逻辑，代码格式如下：
+        
+        变量 match {
+            case value1 => 代码1
+            case value2 => 代码2
+            ...
+            case _ => 代码N 
+        }
+        
+二、 加条件进行匹配
+
+    可以在case语句中使用if条件语句，例如：
+    
+        def judgeGrade(score: Int) = {
+          score match {
+            case score if (score <= 100 && score > 90) => println("A")
+            case score if (score <= 90 && score > 75) => println("B")
+            case score if (score <= 75 && score > 60) => println("C")
+            case score if (score <= 60) => println("C")
+            case _ => println("分数不正确")
+          }
+        }
+        
+三、Array模式匹配
+
+    可以在case语句中使用Array，例如：
+    
+        def courses(array: Array[String]): Unit = {
+          array match {
+            case Array("math") => println("今天只有一节课是math")
+            case Array("math", _*) => println("今天第一节课是math，总共有" + array.length + "节课")
+            case Array(x, y) => println("今天有 " + array.length + "节课," )
+            case _ => println("课程走丢了")
+          }
+        }
+        
+        courses(Array("math"))
+        courses(Array("math", "english"))
+        courses(Array("math", "english", "history"))
+        courses(Array("hehe"))
+        
+四、List模式匹配
+
+    可以在case语句中使用List，例如：
+    
+        def courses(list: List[String]) = {
+          list match {
+            case "math" :: Nil => println("今天只有一节课是math")
+            case x :: y :: Nil => println("今天有" + list.size + "节课")
+            case "english" :: tail => println("今天第一节课是English，共" + list.size + "节课")
+            case _ => println("课程走丢了")
+          }
+        }
+        
+        courses(List("math"))
+        courses(List("history", "math"))
+        courses(List("english", "history", "math"))
+        courses(List("bbb"))
+        
+五、类型匹配
+
+    Scala还有一个强大的功能，可以使用类型匹配，例如：
+    
+       def matchType(N: Any): Unit ={
+         N match {
+           case x: Int => println("Int")
+           case s: String => println("String")
+           case m: Map[_, _] => m.foreach(print)
+           case _ => println("other")
+         }
+       }
+       
+       matchType(1)
+       matchType("Hello")
+       matchType(Map(1 -> "one", 2 -> "two"))
+       matchType(1L)
+       
+六、Scala异常处理
+
+    Scala中用作异常处理的语句如下：
+    
+        try {
+          val i = 10 / 0
+          println(i)
+        } catch {
+          case ea: ArithmeticException => println("除数为0的异常: " + ea.getMessage)
+          case e: Exception => println(e.getMessage)
+        } finally {
+          // 最终执行的代码，用于释放资源等
+        }
+        
+七、case class模式匹配
+
+    case class主要用于模式匹配，例如：
+    
+        abstract class Person
+        case class CTO(name: String) extends Person
+        case class Emp(name: String) extends Person
+        case class Other(name: String) extends Person
+        
+        def caseClassMatch(person: Person): Unit = {
+          person match {
+            case CTO(name) => println("CTO is " + name)
+            case Emp(name) => println("Emp have " + name)
+            case Other(name) => println("Other have " + name)
+          }
+        }
+        
+        caseClassMatch(CTO("WJQ"))
+        caseClassMatch(CTO("ZS"))
+        caseClassMatch(CTO("AS"))
+        
+八、Some None模式匹配
+
+    Option[T]是Scala为了摆脱null这个问题，设计出来的，Option[T] 是一个类型为 T 的可选值的容器： 如果值存在， Option[T] 就是一个 
+    Some[T] ，如果不存在， Option[T] 就是对象 None 。这里我们遍历一个map，使用模式匹配：
+    
+        val curse = Map("Java" -> "one", "C++" -> "two", "Ruby" -> "three", "Python" -> null)
+        def show(value: Option[String]): Unit = {
+          value match {
+            case Some(x) => println(x)
+            case None => println("This language is null!")
+          }
+        }
+        
+        println(curse.get("Python"))  // Some(null)
+        
+        show(curse.get("Java"))       // one
+        show(curse.get("Python"))     // null
+        
