@@ -704,7 +704,7 @@
         val tm = new Tuple2("www.baidu.com", "www.google.com")
         println(tm.swap) 
         
-<h3> 1.4 Scala中的模式匹配 </h3>
+<h3> 1.4 Scala中的模式匹配 (matchpa/exception)</h3>
 
 一、最基础的模式匹配
 
@@ -837,4 +837,113 @@
         
         show(curse.get("Java"))       // one
         show(curse.get("Python"))     // null
+        
+<h3> 1.5 Scala函数中的高级操作 (highoperation)</h3>
+
+一、字符串高级操作
+    
+     1. 多行字符串操作，使用键盘上的shift + 双引号，按三次，然后回车
+     
+        val b =
+          """
+            |这是一个多行字符串
+            |hello
+            |world
+          """.stripMargin
+        
+        println(b)
+        
+     2. Interpolation（字符串插值）：使用s"xxx $xxx" 进行字符串连接，插入等操作
+     
+        val name = "WJQ"
+        println(s"Hello:$name")                     // Hello:WJQ
+        
+        val team = "AC"
+        println(s"Hello:$name, Welcome to $team")   // Hello:WJQ, Welcome to AC
+        
+二、匿名函数
+
+    匿名函数通常特点如下：
+    1）没有名字
+    2）使用 “=>”
+    实例如下：
+    
+    val a = (x: Int, y: Int) => x + y
+    println(a(2, 3))        // 5
+    
+    val b = (x: String, y: String) => {
+      s"=====> $x =====> $y"   // =====> hello =====> world
+    }
+    println(b("hello", "world"))
+    
+三、currying函数
+
+    柯里化（Currying）是把接受多个参数的函数变换成接受一个单一参数(最初函数的第一个参数)的函数，并且返回接受余下的参数且返回结果的新函数的技术。
+    
+        def sum(a: Int, b: Int) = a + b
+        println(sum(2, 3))
+        
+        def sum2(a: Int)(b: Int) = a + b
+        println(sum2(2)(3))
+        
+四、高阶函数（Scala中的重点内容）
+
+    1. map 将集合中的每个元素作用上一个函数（使用相同的函数操作集合上的每个元素）
+    
+        val l = List(1, 2, 3, 4, 5, 6, 7, 8)
+        val l2 = l.map((x: Int) => x * 2)
+        println(l2)   // List(2, 4, 6, 8, 10, 12, 14, 16)
+        val l3 = l.map(x => x * 2)
+        println(l3)   // List(2, 4, 6, 8, 10, 12, 14, 16)
+        val l4 = l.map(_ * 2)
+        println(l4)   // List(2, 4, 6, 8, 10, 12, 14, 16)
+        
+    2. filter 用来过滤集合中的元素
+    
+        println(l4.filter(_ > 8))   // List(10, 12, 14, 16)
+        println(l4.filter(x => x > 8))
+        
+    3. take 取得集合中的前几个元素
+    
+        println(l take 4)
+        println(l.take(4))
+        
+    4. reduce 将集合中的元素依次相加
+        
+        println(l.reduce(_ + _))              // 36
+        println(l.reduce((x, y) => x + y))    // 36
+        
+    5. reduceLeft 集合中的元素从左向右依次执行函数
+    
+        println(l.reduceLeft((x, y) => x - y))  // -34
+        println(l.reduceLeft(_ - _))            // -34
+        println(l.reduceLeft(_ min _))  // 集合中元素从左到右比较得到最小值
+        println(l.reduceLeft((x, y) => x min y))  // 集合中元素从左到右比较得到最小值
+        println(l.reduceLeft(_ max _))  // 集合中元素从左到右比较得到最大值
+        println(l.reduceLeft((x, y) => x max y))  // 集合中元素从左到右比较得到最大值
+        
+    6. reduceRight 集合中的元素按照 (1 - (2 - (3 - (4 - (...)))))的方式执行
+    
+        println(l.reduceRight(_ - _))   // -4
+        println(l.reduceRight((x, y) => x - y)) // -4
+        
+    7. fold 手动添加1个元素（柯里化函数中的第一个参数）与集合中的每个元素做函数操作
+    
+        println(l.fold(36)(_ - _))    // 36 - ((((1 - 2) - 3) - 4) - 5) ... = 0
+        println(l.foldLeft(-1)(_ min _))  // -1
+        println(l.foldRight(10)(_ max _)) // 10
+        println(l.foldRight(4)(_ - _))    // 4 + (1 - (2 - (3 - (4 - (5 - (6 -(7 - 8)))))))   // 0
+        
+    8. flatten 压缩多层集合为一层集合
+    
+        val f = List(List(1, 2), List(3, 4), List(5, 6))
+        println(f.flatten)            // List(1, 2, 3, 4, 5, 6)
+        
+    9. map 对集合中的每个元素执行函数
+    
+        println(f.map(_.map(_ * 2)))  // 两层Map使用两层Map计算 List(List(2, 4), List(6, 8), List(10, 12))
+        
+    10. flatMap 计算并压缩（flatMap = flatten + map的操作）
+    
+        println(f.flatMap(_ map (_ * 2))) // List(2, 4, 6, 8, 10, 12)
         
