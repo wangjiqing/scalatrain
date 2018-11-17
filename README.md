@@ -1011,4 +1011,132 @@
         
     4. andThen 对函数的结果进行下一步的处理
     
+<h3> 1.6 Scala中的隐式转换 (implicitop)</h3>
+
+一、隐式转换的概述
+
+    为一个已存在的类添加一个新的方法（不改变其内容），如果使用Java的话，可以使用动态代理，在Scala中使用隐式转换来实现
+   
+二、实例
+
+    实例： 
+    
+        object ImplicitApp extends App {
         
+          // 定义隐式转换函数
+          implicit def man2superman(man: Man): SuperMan = new SuperMan(man.name)
+          val man = new Man("WJQ")
+          man.fly()
+        
+          // 增强java.io.File类
+          implicit def file2RichFile(file: File): RichFile = new RichFile(file)
+          val file = new File("G:/BaiduNetdiskDownload/hello.txt")
+          val txt = file.read()
+          println(txt)
+        
+        }
+        
+        class Man(val name: String) {
+          def eat(): Unit = {
+            println(s"$name eat ...")
+          }
+        }
+        
+        class SuperMan(val name: String) {
+          def fly(): Unit = {
+            println(s"$name fly ...")
+          }
+        }
+        
+        class RichFile(val file: File) {
+          def read(): String = {
+            scala.io.Source.fromFile(file.getPath).mkString
+          }
+        }
+    
+三、隐式转换切面的封装
+
+    代码ImplicitAspect：
+    
+        object ImplicitAspect extends App {
+        
+          implicit def man2superman(man: Man): SuperMan = new SuperMan(man.name)
+          implicit def file2RichFile(file: File): RichFile = new RichFile(file)
+        }
+        
+    代码ImplicitApp：
+    
+        import java.io.File
+        import ImplicitAspect._   // 引入
+        
+        object ImplicitApp extends App {
+        
+          // 定义隐式转换函数
+        //  implicit def man2superman(man: Man): SuperMan = new SuperMan(man.name)
+          val man = new Man("WJQ")
+          man.fly()
+        
+          // 增强java.io.File类
+        //  implicit def file2RichFile(file: File): RichFile = new RichFile(file)
+          val file = new File("G:/BaiduNetdiskDownload/hello.txt")
+          val txt = file.read()
+          println(txt)
+        
+        }
+        
+        class Man(val name: String) {
+          def eat(): Unit = {
+            println(s"$name eat ...")
+          }
+        }
+        
+        class SuperMan(val name: String) {
+          def fly(): Unit = {
+            println(s"$name fly ...")
+          }
+        }
+        
+        class RichFile(val file: File) {
+          def read(): String = {
+            scala.io.Source.fromFile(file.getPath).mkString
+          }
+        }
+        
+四、隐式参数
+
+    指的是在函数或者方法中，定义一个用implicit修饰的参数，此时Scala会尝试找到一个指定类型的，用implicit修饰的对象，即隐式值，并注入
+    参数
+    
+       def testParam(implicit name: String): Unit = {
+           println(s"$name ~~~~~~~")
+         }
+         // 主动传入参数，按照传入参数操作
+         testParam("zhangsan")
+       
+         // 这里是隐式参数
+         implicit val name = "implicit_name"
+         testParam
+       
+         // 声明了隐式参数，也可以自动重新覆盖
+         testParam(name = "WJQ")
+       
+         // 作用域中出现两个implicit修饰的值时是不允许的
+       //  implicit val s1 = "s1"
+       //  implicit val s2 = "s2"
+       //  testParam
+       
+五、隐式类
+
+     是对类增加implicit限定的类，其作用主要是对类的加强
+     
+        object ImplicitClassApp extends App {
+        
+          implicit class Calculator(x: Int) {
+            def add(a: Int) = a + x
+          }
+        
+          println(1.add(2))
+        
+          // implicit 修饰的类参数是Int，不能使用字符串.add()方法
+        //  "1".add(2)
+        }
