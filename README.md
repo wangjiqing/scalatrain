@@ -1140,3 +1140,159 @@
           // implicit 修饰的类参数是Int，不能使用字符串.add()方法
         //  "1".add(2)
         }
+        
+<h3> 1.7 Scala读取外部资源 (readresource)</h3>
+
+一、Scala读取文件及网络数据
+
+    1. 读取文本文件内容
+    
+        val file = Source.fromFile("G:/BaiduNetdiskDownload/hello.txt", "UTF-8")
+            // 读取文本文件内容
+            def readLine(): Unit = {
+              for (line <- file.getLines()) {
+                println(line)
+              }
+            }
+        //    readLine()
+        
+            def readChar(): Unit = {
+              for (elem <- file) {
+                println(elem)
+              }
+            }
+        //    readChar()
+        
+    2. 读取网络上的内容
+    
+        // 读取网络上的内容
+        def readNet(): Unit = {
+          val file = Source.fromURL("https://www.baidu.com")
+          for (elem <- file.getLines()) {
+            println(elem)
+          }
+        }
+        
+        readNet()
+        
+二、Scala读取MySQL数据
+
+    1. 普通方式操作MySQL
+    
+        def main(args: Array[String]): Unit = {
+          val url = "jdbc:mysql://192.168.177.129:3306/test"
+          val username = "root"
+          val password = "chang"
+        
+          var connection: Connection = null
+          var statement: Statement = null
+          try {
+            // 此处单机时不写是没有问题的，但是在分布式环境下建议还是协商
+            classOf[com.mysql.jdbc.Driver]
+        
+            connection = DriverManager getConnection(url, username, password)
+            statement = connection.createStatement()
+        
+            val resultSet = statement.executeQuery("select * from user")
+            while (resultSet.next()) {
+              val id = resultSet.getInt("id")
+              val name = resultSet.getString("name")
+              val sex = resultSet.getString("sex")
+        
+              println(s"id = $id, name=$name, sex=$sex")
+            }
+          } catch {
+            case exception: Exception => exception.printStackTrace()
+          } finally {
+            if (connection != null) {
+              connection.close()
+            }
+            if (statement != null) {
+              statement.close()
+            }
+          }
+        }
+        
+    2. 封装数据库连接池操作MySQL
+    
+三、Scala读取XML文件
+
+    代码举例
+    
+        // 将xml内容读取出来
+          def loadXml(): Unit = {
+            val xml1 = XML.load(this.getClass.getClassLoader.getResource("test.xml"))
+            println(xml1)
+          }
+        //  loadXml()
+        
+          def loadXml1(): Unit = {
+            val xml = XML.load(new FileInputStream("E:\\IdeaProjects-github\\scalatrain\\src\\resource\\test.xml"))
+            println(xml)
+          }
+        //  println(loadXml1())
+        
+          def loadXml2(): Unit = {
+            val xml = XML.load(new InputStreamReader(new FileInputStream("E:\\IdeaProjects-github\\scalatrain\\src\\resource\\test.xml")))
+            println(xml)
+          }
+        
+          loadXml2()
+          
+四、Scala读取XML属性内容
+
+    读取xml文件属性
+    
+        // 将xml内容读取出来
+          def loadXml(): Unit = {
+            val xml1 = XML.load(this.getClass.getClassLoader.getResource("test.xml"))
+            println(xml1)
+          }
+        //  loadXml()
+        
+          def loadXml1(): Unit = {
+            val xml = XML.load(new FileInputStream("E:\\IdeaProjects-github\\scalatrain\\src\\resource\\test.xml"))
+            println(xml)
+          }
+        //  println(loadXml1())
+        
+          def loadXml2(): Unit = {
+            val xml = XML.load(new InputStreamReader(new FileInputStream("E:\\IdeaProjects-github\\scalatrain\\src\\resource\\test.xml")))
+            println(xml)
+          }
+        
+        //  loadXml2()
+        
+          // readXml
+          def readMXLAttr(): Unit = {
+            val xml = XML.load(this.getClass.getClassLoader.getResource("test.xml"))
+            // header/field  dom   层级导航标签查找
+            val headerField  = xml \ "header" \ "field"
+        //    println(headerField)
+        
+            // all field dom      查找所有的名称为field的标签
+            val field = xml \\ "field"
+            for (elem <- field) {
+        //      println(elem)
+            }
+        
+            //  header/field -> name  取得header标签下的field标签中name的属性
+        //    val fieldAttributes = (xml \ "header" \ "field").map(_ \ "@name")
+            val fieldAttributes = (xml \ "header" \ "field" \\ "@name")
+            for (elem <- fieldAttributes) {
+        //      println(elem)
+            }
+        
+            // name="Logon"的标签
+            val filters = (xml \\ "message").filter(_.attribute("name").exists(_.text.equals("Logon")))
+            for (elem <- filters) {
+        //      println(elem)
+            }
+        
+            // header/field/name 中标签内的值
+            (xml \ "header" \ "field").map(x => (x \ "@name", x.text, x \ "@required")).foreach(println)
+          }
+          
+五、Scala读取JSON文件
+
+六、Scala提供Rest接口及调用Rest接口
