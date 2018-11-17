@@ -1384,4 +1384,21 @@
           
 五、Scala读取JSON文件
 
+    /**
+      * Scala读取JSON
+      */
+    object ReadJsonApp extends App {
+    
+      def readJson1(json: Option[Any]) = json match {
+        case Some(map: Map[String, Any]) => map
+      }
+    
+      val str = Source.fromFile("G:\\BaiduNetdiskDownload\\test.json").mkString
+      val json = JSON.parseFull(str)
+    
+      println(readJson1(json))
+    }
+
 六、Scala提供Rest接口及调用Rest接口
+
+    （待完善）
