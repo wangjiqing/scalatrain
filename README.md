@@ -603,7 +603,7 @@
         
     6. 取值
     
-        rintln(m get "Bob")  // Some(3)
+        println(m get "Bob")  // Some(3)
         println(m("Bob"))     // 3
      
     7. 遍历
